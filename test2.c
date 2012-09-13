@@ -70,7 +70,7 @@ int main(void)
 
     duration  = ts2.tv_sec + ts2.tv_nsec/1E9;
     duration -= ts1.tv_sec + ts1.tv_nsec/1E9;
-    
+
     cpu  = cpu2.tv_sec + cpu2.tv_nsec/1E9;
     cpu -= cpu1.tv_sec + cpu1.tv_nsec/1E9;
 

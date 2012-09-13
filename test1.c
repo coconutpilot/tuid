@@ -1,7 +1,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include "tuid.h"
- 
+
 int main(void)
 {
     uint64_t tid64 = tuid64();
