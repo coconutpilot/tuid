@@ -62,7 +62,7 @@ int main(void)
     cpu  = cpu2.tv_sec + cpu2.tv_nsec/1E9;
     cpu -= cpu1.tv_sec + cpu1.tv_nsec/1E9;
 
-    printf("tuid32 real: %f cpu: %f\n", duration, cpu);
+    printf("tuid32 times, real: %f cpu: %f\n", duration, cpu);
 
     clock_gettime(CLOCK_REALTIME, &ts1);
     test64();
@@ -74,7 +74,7 @@ int main(void)
     cpu  = cpu2.tv_sec + cpu2.tv_nsec/1E9;
     cpu -= cpu1.tv_sec + cpu1.tv_nsec/1E9;
 
-    printf("tuid64 real: %f cpu: %f\n", duration, cpu);
+    printf("tuid64 times, real: %f cpu: %f\n", duration, cpu);
     return 0;
 }
 
