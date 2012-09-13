@@ -11,7 +11,7 @@ void test32(void)
 
     uint32_t tid1, tid2;
     int i;
-    for (i = 0; i < ITERATIONS; i++) {
+    for (i = 1; i < ITERATIONS; i++) {
         tid1 = tuid32();
 //        printf("Got a tuid: %" PRIX32 "\n", tid1);
 
@@ -29,7 +29,7 @@ void test64(void)
 
     uint64_t tid1, tid2;
     int i;
-    for (i = 0; i < ITERATIONS; i++) {
+    for (i = 1; i < ITERATIONS; i++) {
         tid1 = tuid64();
 //        printf("Got a tuid: %" PRIX64 "\n", tid1);
 
