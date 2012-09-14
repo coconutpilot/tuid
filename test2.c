@@ -43,9 +43,6 @@ void test64(void)
 
 int main(void)
 {
-    printf("long: %d\n", sizeof(long));
-    printf("uint32_t: %d\n", sizeof(uint32_t));
-
     struct timespec  ts1,  ts2;
     struct timespec cpu1, cpu2;
     double duration, cpu;
