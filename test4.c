@@ -1,5 +1,6 @@
 #include <inttypes.h>
 #include <pthread.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include "tuid.h"
 
@@ -9,12 +10,12 @@
 void * test_tuid(void * t)
 {
     int i;
-    for (i = 1; i < ITERATIONS; i++) {
+    for (i = 0; i < ITERATIONS; i++) {
         uint32_t tid32 = tuid32();
-    //    printf("Thread %i got a tuid32: %" PRIu32 "\n", (int)t, tid32);
         printf("%" PRIX32 "\n", tid32);
     }
 
+    pthread_exit(0);
 }
 
 int main(void)
@@ -31,6 +32,16 @@ int main(void)
             return 13;
         }
     }
-    pthread_exit(NULL);
-}
 
+
+    for (t = 0; t < THREADS; t++) {
+        int rc;
+        void * t_rc;
+        rc = pthread_join(threads[t], &t_rc);
+        if (rc) {
+            printf("pthread_join failed: %d\n", rc);
+            return 13;
+        }
+        printf("thread exited with status: %d\n", (int)t_rc);
+    }
+}
