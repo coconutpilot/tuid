@@ -62,8 +62,10 @@ int main(void)
     printf("tuid32 times, real: %f cpu: %f\n", duration, cpu);
 
     clock_gettime(CLOCK_REALTIME, &ts1);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &cpu1);
     test64();
     clock_gettime(CLOCK_REALTIME, &ts2);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &cpu2);
 
     duration  = ts2.tv_sec + ts2.tv_nsec/1E9;
     duration -= ts1.tv_sec + ts1.tv_nsec/1E9;
