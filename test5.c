@@ -41,4 +41,5 @@ int main(void)
         }
         printf("thread exited with status: %d\n", (int)t_rc);
     }
+    return 0;
 }
