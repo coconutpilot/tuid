@@ -12,6 +12,8 @@ void * test_tuid(void * t)
 
     uint32_t tid32 = tuid32();
     printf("Thread %i got a tuid32: %" PRIu32 "\n", (int)t, tid32);
+    
+    pthread_exit(NULL);
 }
 
 int main(void)
@@ -28,6 +30,6 @@ int main(void)
             return 13;
         }
     }
-    pthread_exit(NULL);
+    return 0;
 }
 
