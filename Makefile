@@ -18,7 +18,7 @@ tuid.o: tuid.c tuid.h
 	gcc $(CFLAGS) -I. -fPIC -c $<
 
 test: $(TEST_TARGETS)
-	LD_LIBRARY_PATH=. $>
+	LD_LIBRARY_PATH=. $^
 
 clean:
 	rm -f *.so* *.o $(TEST_TARGETS)

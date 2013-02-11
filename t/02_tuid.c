@@ -17,7 +17,6 @@ void test32(void)
 
         if (tid1 == tid2) {
             printf("collision: %" PRIX32 "\n", tid1);
-            return 13;
         }
         tid2 = tid1;
 
@@ -36,7 +35,6 @@ void test64(void)
 
         if (tid1 == tid2) {
             printf("collision: %" PRIX64 "\n", tid1);
-            return 13;
         }
         tid2 = tid1;
 

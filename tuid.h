@@ -5,9 +5,11 @@ extern uint64_t tuid64(void);
 extern uint32_t tuid32(void);
 
 typedef struct {
-    int id;
+    uint64_t epoch_offset;
     int T_bits;
     int t_bits;
+    int id;
+    int c_bits;
     int r_bits;
 } s_t64;
 
