@@ -10,8 +10,8 @@ void * test_tuid(void * t)
 {
     int i;
     for (i = 0; i < ITERATIONS; i++) {
-        uint64_t tid64 = tuid64();
-        printf("%" PRIX64 "\n", tid64);
+        tuid64_t t64 = tuid64();
+        printf("%" PRIX64 "\n", t64);
     }
     pthread_exit(NULL);
 }

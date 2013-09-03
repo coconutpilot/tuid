@@ -1,4 +1,5 @@
 CFLAGS=-g -Wall -DWARNINGS
+CFLAGS=-g -Wall
 
 .PHONY: clean
 

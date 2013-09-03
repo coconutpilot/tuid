@@ -5,13 +5,14 @@
 
 int main(void)
 {
-    s_t64 * ctx64 = malloc(sizeof(* ctx64));
+    tuid64_s * ctx64 = malloc(sizeof(* ctx64));
     ctx64->id = 1;
+    ctx64->sec_bits = 3;
 
     uint64_t tid64 = tuid64_r(ctx64);
     printf("Got a tuid64: %" PRIu64 "\n", tid64);
 
-    s_t32 * ctx32 = malloc(sizeof(* ctx32));
+    tuid32_s * ctx32 = malloc(sizeof(* ctx32));
     ctx32->id = 1;
 
     uint32_t tid32 = tuid32_r(ctx32);
