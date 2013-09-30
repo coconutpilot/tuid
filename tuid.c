@@ -1,91 +1,72 @@
 #include <inttypes.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include "tuid.h"
+#include "dbg.h"
 
-
-tuid64_t tuid64(void)
+tuid64_t tuid64_r(tuid64_s * ctx)
 {
-    static tuid64_t last = 0;
-    struct timespec tp;
+    if (++ctx->counter_last > ctx->counter_max) {
+        ctx->counter_last = 0;
 
-    clock_gettime(CLOCK_REALTIME, &tp);
+        struct timespec tp;
+        clock_gettime(CLOCK_REALTIME, &tp);
 
-    tuid64_t t64 = tp.tv_sec;
+        tuid64_t secs = tp.tv_sec & ctx->sec_mask;
+        secs <<= ctx->sec_shift;
+        ctx->sec_last = secs;
 
-    t64 <<= 32;
+        tuid64_t nsecs = tp.tv_nsec & ctx->nsec_mask;
+        nsecs <<= ctx->nsec_shift;
+        ctx->nsec_last = nsecs;
+    }
 
-    t64 |= tp.tv_nsec;
+    tuid64_t t64 = ctx->sec_last;
+    t64 |= ctx->nsec_last;
 
-    if (t64 <= last) {
-        ++last;
-#ifdef WARNINGS
-        fprintf(stderr, "tuid64() collision at time: %" PRIu64 ", forced tuid64 to:  %" PRIu64 "\n", t64, last);
-#endif
-        t64 = last;
+    tuid64_t counter = ctx->counter_last;
+    counter <<= ctx->counter_shift;
+    t64 |= counter;
+
+    t64 |= ctx->id;
+
+    tuid64_t rnd = xorshift64(&(ctx->random)) & ctx->random_mask;
+    rnd <<= ctx->random_shift;
+    t64 |= rnd;
+
+    if (t64 <= ctx->last) {
+        debug("tuid too small: %" PRIx64 ", incrementing last tuid by 1", t64);
+        ++ctx->last;
+        t64 = ctx->last;
     }
     else {
-        last = t64;
+        ctx->last = t64;
     }
 
+    debug("generated tuid: %" PRIx64, t64);
     return t64;
 }
 
-// ssssssnnnniiccrr
-tuid64_t tuid64_r(void * ctx)
+void tuid64_reset_counter(tuid64_s * ctx)
 {
-    struct timespec tp;
-    clock_gettime(CLOCK_REALTIME, &tp);
-
-    tuid64_t t64 = tp.tv_sec;
-
-    t64 <<= (((tuid64_s *)ctx)->sec_bits);
-
-    t64 |= tp.tv_nsec & 0xFF00;
-
-    t64 |= (((tuid64_s *)ctx)->id);
-
-    return t64;
-}
-
-tuid32_t tuid32(void)
-{
-    static tuid32_t last = 0;
-    struct timespec tp;
-
-    clock_gettime(CLOCK_REALTIME, &tp);
-
-    tuid32_t t32 = tp.tv_sec & 0xFFFFFFFF;
-
-    if (t32 <= last) {
-        ++last;
-#ifdef WARNINGS
-        fprintf(stderr, "tuid32() collision at time: %d, forced tuid32 to: %d\n", t32, last);
-#endif
-        t32 = last;
-    }
-    else {
-        last = t32;
-    }
-
-    return t32;
-}
-
-tuid32_t tuid32_r(void * ctx)
-{
-    struct timespec tp;
-
-    clock_gettime(CLOCK_REALTIME, &tp);
-
-    tuid32_t t32 = tp.tv_sec & 0xFFFFFFF0;
-
-    t32 |= (((tuid32_s *)ctx)->id);
-
-    return t32;
+    ctx->counter_last = ctx->counter_max;
 }
 
 int check_tuid64_spec(tuid64_s * ctx)
 {
-    
+    return 0;    
+}
+
+/* Algorithm taken from: Xorshift RNGs - George Marsaglia
+ * http://www.jstatsoft.org/v08/i14/paper
+ */
+tuid64_t xorshift64(uint64_t * random)
+{
+    *random ^= (*random<<13);
+    *random ^= (*random>>7);
+    *random ^= (*random<<17);
+
+    return *random;
 }
 
