@@ -52,6 +52,6 @@ extern int check_tuid64_spec(tuid64_s *);
 extern int check_tuid32_spec(tuid32_s *);
 
 uint64_t xorshift64(uint64_t *);
-uint64_t xorshift32(uint32_t *);
+uint32_t xorshift32(uint32_t *);
 
 #endif
