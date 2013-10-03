@@ -5,6 +5,15 @@
 #include "tuid.h"
 #include "dbg.h"
 
+/*
+ * Algorithm:
+ * 1 Get a timestamp masked to the desired bits.
+ * 2 Return tuids using this time until counter_max reached.
+ * 3 When counter_max, get new timestamp as per 1.  If equal
+ * or lower increment by 1.  Reset counter.
+ *
+ */
+
 tuid64_t tuid64_r(tuid64_s * ctx)
 {
     if (++ctx->counter_last > ctx->counter_max) {
@@ -15,7 +24,14 @@ tuid64_t tuid64_r(tuid64_s * ctx)
 
         tuid64_t secs = tp.tv_sec & ctx->sec_mask;
         secs <<= ctx->sec_shift;
-        ctx->sec_last = secs;
+        if (ctx->sec_last && ctx->sec_last >= secs) {
+            debug("Collision incrementing %" PRIx64, ctx->minimum_increment);
+            ctx->sec_last += ctx->minimum_increment;
+        }
+        else {
+            debug("New time %" PRIx64 " Old time %" PRIx64, secs, ctx->sec_last);
+            ctx->sec_last = secs;
+        }
 
         tuid64_t nsecs = tp.tv_nsec & ctx->nsec_mask;
         nsecs <<= ctx->nsec_shift;
@@ -109,6 +125,13 @@ int check_tuid64_spec(tuid64_s * ctx)
 int check_tuid32_spec(tuid32_s * ctx)
 {
     return 0;    
+}
+
+uint64_t calculate_minimum_increment(uint64_t mask)
+{
+    /* there must be a simpler way */
+    uint64_t mi = ((mask ^ (mask - 1)) >> 1) + 1;
+    return mi;
 }
 
 /* Algorithm taken from: Xorshift RNGs - George Marsaglia

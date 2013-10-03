@@ -8,8 +8,11 @@ int main(void)
 {
     tuid64_s * ctx64 = malloc(sizeof(* ctx64));
 
+    ctx64->sec_last = 0;
     ctx64->sec_mask = 0x00000000FFFFFFFFLL;
     ctx64->sec_shift = 32;
+
+    ctx64->minimum_increment = calculate_minimum_increment((ctx64->sec_mask << ctx64->sec_shift));
 
     ctx64->nsec_mask = 0x00000000FF000000LL;
     ctx64->nsec_shift = 0;
@@ -20,8 +23,10 @@ int main(void)
     ctx64->counter_shift = 8;
 
     ctx64->last = 0;
+
     ctx64->random = 0x5248c8561600f46d;
     ctx64->random_mask = 0xFF;
+//    ctx64->random_mask = 0;
     ctx64->random_shift = 0;
 
     int i;

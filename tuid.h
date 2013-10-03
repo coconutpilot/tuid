@@ -11,6 +11,7 @@ typedef struct {
     uint64_t sec_last;
     uint64_t sec_mask;
     uint8_t  sec_shift;
+    uint64_t minimum_increment;
     uint64_t nsec_last;
     uint64_t nsec_mask;
     uint8_t  nsec_shift;
@@ -50,6 +51,8 @@ extern tuid32_t tuid32(void);
 
 extern int check_tuid64_spec(tuid64_s *);
 extern int check_tuid32_spec(tuid32_s *);
+
+uint64_t calculate_minimum_increment(uint64_t);
 
 uint64_t xorshift64(uint64_t *);
 uint32_t xorshift32(uint32_t *);
