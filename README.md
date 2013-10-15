@@ -1,9 +1,9 @@
 TUIDs - Time based Unique IDentifiers
 
 SYNOPSIS
-     tuid64_s *myctx = tuid64_init(NULL);
-     uint64_t mytuid = tuid64_r(myctx);
-     ...
+>     tuid64_s *myctx = tuid64_init(NULL);
+>     uint64_t mytuid = tuid64_r(myctx);
+>     ...
 
 DESCRIPTION
 
