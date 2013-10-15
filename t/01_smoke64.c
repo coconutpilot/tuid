@@ -3,36 +3,44 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "tuid.h"
+#include "tap/tap.h"
 
 int main(void)
 {
-    tuid64_s * ctx64 = malloc(sizeof(* ctx64));
+    plan(NO_PLAN);
 
-    ctx64->sec_last = 0;
-    ctx64->sec_mask = 0x00000000FFFFFFFFLL;
-    ctx64->sec_shift = 32;
+    tuid64_s *ctx = malloc(sizeof(*ctx));
+    tuid64_s *oldptr = ctx;
+    tuid64_init(ctx);
+    ok(oldptr == ctx, "Context initialzed with pre-malloc");
 
-    ctx64->minimum_increment = calculate_minimum_increment((ctx64->sec_mask << ctx64->sec_shift));
+    tuid64_s *ctx2 = tuid64_init(NULL);
+    ok(ctx2 != NULL, "Context malloc-ed in tuid64_init");
 
-    ctx64->nsec_mask = 0x00000000FF000000LL;
-    ctx64->nsec_shift = 0;
+    uint64_t t = tuid64_r(ctx);
+    ok(t != 0, "Got a tuid");
 
-    ctx64->id = 0x000000000012000000LL;
+    t = tuid64_r(0);
+    ok(t == NULL, "Test invalid context, expected 0 got %" PRIx64, t);
 
-    ctx64->counter_last = ctx64->counter_max = 0xFF;
-    ctx64->counter_shift = 8;
+/*
+//    ctx->nsec_min_increment = nsec_min_increment((ctx->nsec_mask << ctx->nsec_shift));
 
-    ctx64->last = 0;
+    ctx->id        = 0x0000000012000000ULL;
 
-    ctx64->random = 0x5248c8561600f46d;
-    ctx64->random_mask = 0xFF;
-//    ctx64->random_mask = 0;
-    ctx64->random_shift = 0;
+    ctx->counter = ctx->counter_max = 0xF;
+    ctx->counter_shift = 8;
+
+    ctx->last = 0;
+
+    ctx->random = 0x5248c8561600f46dULL;
+    ctx->random_mask = 0xFF;
+    ctx->random_shift = 4;
 
     int i;
     for (i=0; i < 0x02FF; i++) {
 
-        uint64_t tid64 = tuid64_r(ctx64);
+        uint64_t tid64 = tuid64_r(ctx);
         if (tid64 == 0) {
             printf("FATAL: no tuid\n");
             exit(1);
@@ -40,23 +48,9 @@ int main(void)
 //        printf("%d Got a tuid64: %" PRIu64 "\n", i, tid64);
 //        printf("Got a tuid64: %" PRIx64 "\n", tid64);
     }
+*/
 
-    free(ctx64);
+    tuid64_end(ctx2);
+    free(ctx);
     return 0;
 }
-
-/*
-typedef struct {
-    uint64_t epoch_offset;
-    uint64_t sec_mask;
-    uint8_t  sec_shift;
-    uint64_t nsec_mask;
-    uint8_t  nsec_shift;
-    uint64_t id;
-    uint16_t counter;
-    uint16_t counter_max;
-    uint8_t  counter_shift;
-    tuid64_t initial;
-    tuid64_t last;
-} tuid64_s;
-*/

@@ -3,58 +3,82 @@
 
 #include <time.h>
 
-typedef uint64_t tuid64_t; 
-typedef uint32_t tuid32_t;
-
-typedef struct {
-    uint64_t epoch_offset;
-    uint64_t sec_last;
-    uint64_t sec_mask;
-    uint8_t  sec_shift;
-    uint64_t minimum_increment;
-    uint64_t nsec_last;
-    uint64_t nsec_mask;
-    uint8_t  nsec_shift;
-    uint64_t id;
-    uint16_t counter_last;
-    uint16_t counter_max;
-    uint8_t  counter_shift;
-    uint64_t random;
-    uint64_t random_mask;
-    uint8_t  random_shift;
-    tuid64_t last;
+/**
+ * This struct represents a TUID context.
+ *
+ * Note nanoseconds abbreviated as nsec.
+ */
+typedef struct tuid64_s {
+    uint64_t nsec_offset;       /* nsec offset from unixtime epoch */
+    uint64_t nsec;              /* unixtime in nsec, adjusted by offset */
+    uint64_t nsec_mask;         /* the bits of nsec to be used in the TUID */
+    uint8_t  nsec_shift;        /* how far to left shift the nsec bits */
+    uint64_t nsec_min_increment;/* minimum increment required if nsec mask was too coarse */
+    uint64_t id;                /* static id, ie machine id */
+    uint16_t counter;           /* a counter, current value */
+    uint16_t counter_max;       /* when to reset the counter to 0 */
+    uint8_t  counter_shift;     /* how far to left shift the counter bits */
+    uint64_t random;            /* a random #, also used as seed */
+    uint64_t random_mask;       /* the bits of the random # to be used */
+    uint8_t  random_shift;      /* XXX: turns out this is not needed */
+    uint64_t last;              /* the last TUID, used for uniqueness check */
 } tuid64_s;
 
-typedef struct {
-    uint64_t epoch_offset;
-    uint64_t sec_last;
-    uint32_t sec_mask;
-    uint8_t  sec_shift;
-    uint64_t nsec_last;
-    uint32_t nsec_mask;
-    uint8_t  nsec_shift;
-    uint32_t id;
-    uint16_t counter_last;
-    uint16_t counter_max;
-    uint8_t  counter_shift;
-    uint32_t random;
-    uint32_t random_mask;
-    uint8_t  random_shift;
-    tuid32_t last;
-} tuid32_s;
+/**
+ * tuid64_init - initialize a context to generate TUIDs
+ * @ctx: optional pointer to pre-malloced tuid64_s struct
+ *
+ * TUID generation requires a context that defines the layout and tracks data
+ * about previously generated TUIDs.  This function initializes that context.
+ *
+ * If unable to malloc the context emits a warning to stderr and returns NULL.
+ *
+ * Examples:
+ *      tuid64_s *ctx = malloc(sizeof(*ctx));
+ *      tuid64_init(ctx);
+ *
+ *      tuid64_s *ctx = tuid64_init(NULL);
+ */
+extern tuid64_s *   tuid64_init(tuid64_s *ctx);
 
-extern tuid64_t tuid64_r(tuid64_s *);
-extern tuid32_t tuid32_r(tuid32_s *);
+/**
+ * tuid64_end - stop TUID generation and release memory 
+ * @ctx: pointer to TUID context
+ *
+ * This function only needs to be called for contexts allocated by tuid64_init.
+ *
+ * If ctx is NULL emits a warning to stderr and continues.
+ *
+ * Example:
+ *      tuid64_end(ctx);
+ */
+extern void         tuid64_end(tuid64_s *ctx);
 
-extern tuid64_t tuid64(void);
-extern tuid32_t tuid32(void);
+/**
+ * tuid64_reset_counter - reset TUIDs internal counter
+ * @ctx: pointer to TUID context
+ *
+ * Reset the counter to 0.  This is useful to synchronize a TUID to some
+ * external events.
+ *
+ * If ctx is NULL emits a warning to stderr and continues.
+ *
+ * Example:
+ *      tuid64_reset_counter(ctx);
+ */
+extern void         tuid64_reset_counter(tuid64_s *ctx);
 
-extern int check_tuid64_spec(tuid64_s *);
-extern int check_tuid32_spec(tuid32_s *);
-
-uint64_t calculate_minimum_increment(uint64_t);
-
-uint64_t xorshift64(uint64_t *);
-uint32_t xorshift32(uint32_t *);
+/**
+ * tuid64_r - generate a TUID
+ * @ctx:  pointer to TUID context
+ *
+ * Generate a TUID.
+ *
+ * Returns 0 on error.
+ *
+ * Example:
+ *      uint64_t mytuid = tuid64_r(my_ctx);
+ */
+extern uint64_t     tuid64_r(tuid64_s *ctx);
 
 #endif

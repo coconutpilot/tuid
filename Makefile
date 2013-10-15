@@ -8,7 +8,7 @@ TEST_TARGETS = $(patsubst %.c,%,$(wildcard t/*.c))
 all: libtuid.so $(TEST_TARGETS)
 
 $(TEST_TARGETS): libtuid.so
-	gcc $(CFLAGS) $@.c -o $@ -I. -L. -ltuid
+	gcc $(CFLAGS) $@.c t/tap/tap.c -o $@ -I. -L. -ltuid
 
 libtuid.so: tuid.o
 	ld -shared -soname $@.1 -o $@.1.0 tuid.o -lc -lrt
@@ -20,6 +20,9 @@ tuid.o: tuid.c tuid.h
 
 test: $(TEST_TARGETS)
 	LD_LIBRARY_PATH=. $^
+
+testvalgrind: $(TEST_TARGETS)
+	LD_LIBRARY_PATH=. valgrind --track-origins=yes $^
 
 clean:
 	rm -f *.so* *.o $(TEST_TARGETS)
