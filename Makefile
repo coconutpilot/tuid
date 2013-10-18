@@ -8,7 +8,7 @@ TEST_PROGRAMS = $(patsubst %.c,%,$(TEST_SOURCES))
 TEST_TARGETS  = $(patsubst %.c,%.test,$(TEST_SOURCES))
 TEST_VALGRIND = $(patsubst %.c,%.vgtest,$(TEST_SOURCES))
 
-all: libtuid.so $(TEST_PROGRAMS) tags
+all: libtuid.so $(TEST_PROGRAMS)
 
 $(TEST_PROGRAMS): libtuid.so t/tap/tap.o
 
