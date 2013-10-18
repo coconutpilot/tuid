@@ -1,14 +1,14 @@
 CFLAGS = -g -Wall -DWARNINGS -MMD
 CFLAGS += -I.
 
-.PHONY: clean test testvalgrind
+.PHONY: clean test testvalgrind tags
 
 TEST_SOURCES  = $(wildcard t/*.c)
 TEST_PROGRAMS = $(patsubst %.c,%,$(TEST_SOURCES))
 TEST_TARGETS  = $(patsubst %.c,%.test,$(TEST_SOURCES))
 TEST_VALGRIND = $(patsubst %.c,%.vgtest,$(TEST_SOURCES))
 
-all: libtuid.so $(TEST_PROGRAMS)
+all: libtuid.so $(TEST_PROGRAMS) tags
 
 $(TEST_PROGRAMS): libtuid.so t/tap/tap.o
 
@@ -29,10 +29,13 @@ testvalgrind: $(TEST_VALGRIND)
 %.vgtest: %
 	LD_LIBRARY_PATH=. valgrind --track-origins=yes $<
 
+tags:
+	ctags -R
+
 # self cleaning target from Mischa Sandberg
 clean:
 	@rm -rf $(shell $(MAKE) -nps all test testvalgrind | sed -n '/^# I/,$${/^[^\#\[%.][^ %]*: /s/:.*//p;}') \
-		libtuid.so.*  gmon.out *.gcda *.gcno *.gcov *.prof \
+		libtuid.so.* tags gmon.out *.gcda *.gcno *.gcov *.prof \
 		$(filter %.d,$(MAKEFILE_LIST))
 
 -include $(shell find . -name '*.d')
