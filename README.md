@@ -23,4 +23,8 @@ monotonically increasing so their natural sort order is the order of creation.
 
 ## DOCUMENTATION
 
-Seet tuid.h for usage.
+See tuid.h for usage.
+
+## Travis-ci Build Status
+
+[![Build Status](https://travis-ci.org/coconutpilot/tuid.png)](https://travis-ci.org/coconutpilot/tuid)
