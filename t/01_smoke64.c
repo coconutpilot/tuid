@@ -21,9 +21,9 @@ int main(void)
     ok(t != 0, "Got a tuid");
 
     t = tuid64_r(0);
-    ok(t == NULL, "Test invalid context, expected 0 got %" PRIx64, t);
+    ok(! t, "Test invalid context, expected 0 got %" PRIx64, t);
 
     tuid64_end(ctx2);
     free(ctx);
-    return 0;
+    return exit_status();
 }
