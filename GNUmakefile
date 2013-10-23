@@ -1,4 +1,5 @@
-CFLAGS = -g -Wall -DWARNINGS -MMD
+CFLAGS = -g -Wall -MMD
+CFLAGS += -DNDEBUG
 CFLAGS += -I.
 
 .PHONY: clean test testvalgrind tags
