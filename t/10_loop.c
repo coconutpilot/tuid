@@ -1,3 +1,7 @@
+/*
+ * TUID Copyright (c) 2013 David Sparks
+ */
+
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>

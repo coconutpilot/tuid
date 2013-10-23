@@ -1,3 +1,7 @@
+/*
+ * TUID Copyright (c) 2013 David Sparks
+ */
+
 #ifndef tuid_h__
 #define tuid_h__
 
