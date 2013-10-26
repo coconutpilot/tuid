@@ -16,13 +16,13 @@ static const uint64_t sec2nsec = 1000000000ULL;
  * get_min_inc64 - calculate the minimum increment based on a bitmask
  * @mask: the bitmask we want the increment for
  *
- * Effectively returns the LSB in mask (except when mask == 0).
+ * Effectively returns the LSB in mask (except when mask == 0 it returns 1).
  */
 static uint64_t get_min_inc64(uint64_t);
 
 /**
  * xorshift64 - fast random number generator
- * @random: pointer to prev random value, will return next random value
+ * @random: pointer to prev random value, will point at next random value
  *
  * This simple random number generator will return all 2^64(*) possibilities
  * before cycling.
