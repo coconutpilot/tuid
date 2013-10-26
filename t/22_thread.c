@@ -5,7 +5,7 @@
 #include "tap/tap.h"
 
 #define THREADS 8
-#define ITERATIONS 100000
+#define ITERATIONS 100
 
 typedef struct arg_s {
     int      tid;
@@ -19,6 +19,7 @@ void * test_tuid(void * t)
     int i;
     for (i = 0; i < ITERATIONS; i++) {
         uint64_t t64 = tuid64_r(a->ctx);
+        fprintf(a->fp, "%" PRIX64 "\n", t64);
         fprintf(a->fp, "%" PRIX64 "\n", t64);
     }
     if (fclose(a->fp)) {
@@ -95,15 +96,14 @@ int main(void)
     ssize_t r;
     int failed = 0;
 
-    while (r = fread(buf, sizeof(buf), 1, cmd)) {
-        /* XXX: this can print out garbage as buf may not be NULL terminated */
-        diag(buf);
+    while (fgets(buf, sizeof(buf), cmd)) {
+        diag("Duplicate tuid: %s", buf);
         ++failed;
     }
     pclose(cmd);
 
     if (failed) {
-        fail("Duplicate tuid found");
+        fail("Duplicates found");
     }
     else {
         pass();
