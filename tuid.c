@@ -44,13 +44,20 @@ static uint64_t xorshift64(uint64_t *random)
     return *random;
 }
 
+tuid64_s * tuid64_create()
+{
+    tuid64_s *ctx = malloc(sizeof(*ctx));
+    check_mem(ctx);
 
-tuid64_s * tuid64_init(tuid64_s *ctx)
+    return ctx;
+error:
+    return 0;
+}
+
+int tuid64_init(tuid64_s *ctx)
 {
     if (! ctx) {
-        tuid64_s *newctx = malloc(sizeof(* newctx));
-        check_mem(newctx);
-        ctx = newctx;
+        ctx = tuid64_create();
     }
 
     ctx->nsec_offset = 0;
@@ -76,7 +83,7 @@ error:
     return 0;
 }
 
-void tuid64_end(tuid64_s *ctx)
+void tuid64_destroy(tuid64_s *ctx)
 {
     check(ctx, "Invalid tuid context");
     free(ctx);

@@ -18,7 +18,7 @@ int main(void)
     tuid64_init(ctx);
     ok(oldptr == ctx, "Context initialzed with pre-malloc");
 
-    tuid64_s *ctx2 = tuid64_init(NULL);
+    tuid64_s *ctx2 = tuid64_create(NULL);
     ok(ctx2 != NULL, "Context malloc-ed in tuid64_init");
 
     uint64_t t = tuid64_r(ctx);
@@ -27,7 +27,7 @@ int main(void)
     t = tuid64_r(0);
     ok(! t, "Test invalid context, expected 0 got %" PRIx64, t);
 
-    tuid64_end(ctx2);
+    tuid64_destroy(ctx2);
     free(ctx);
     return exit_status();
 }

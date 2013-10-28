@@ -30,12 +30,10 @@ typedef struct tuid64_s {
 
 /**
  * tuid64_init - initialize a context to generate TUIDs
- * @ctx: optional pointer to pre-malloced tuid64_s struct
+ * @ctx: pointer to pre-malloced tuid64_s struct
  *
  * TUID generation requires a context that defines the layout and tracks data
  * about previously generated TUIDs.  This function initializes that context.
- *
- * If unable to malloc the context emits a warning to stderr and returns NULL.
  *
  * Examples:
  *      tuid64_s *ctx = malloc(sizeof(*ctx));
@@ -43,27 +41,32 @@ typedef struct tuid64_s {
  *
  *      tuid64_s *ctx = tuid64_init(NULL);
  */
-extern tuid64_s *   tuid64_init(tuid64_s *ctx);
+extern int          tuid64_init(tuid64_s *ctx);
 
 /**
- * tuid64_end - stop TUID generation and release memory 
+ * If unable to malloc the context emits a warning to stderr and returns NULL.
+ */
+extern tuid64_s *   tuid64_create();
+
+/**
+ * tuid64_destroy - release memory allocated to the TUID context
  * @ctx: pointer to TUID context
  *
- * This function only needs to be called for contexts allocated by tuid64_init.
+ * This function needs to be called for contexts allocated by tuid64_create.
  *
  * If ctx is NULL emits a warning to stderr and continues.
  *
  * Example:
- *      tuid64_end(ctx);
+ *      tuid64_destroy(ctx);
  */
-extern void         tuid64_end(tuid64_s *ctx);
+extern void         tuid64_destroy(tuid64_s *ctx);
 
 /**
  * tuid64_reset_counter - reset TUIDs internal counter
  * @ctx: pointer to TUID context
  *
- * Reset the counter to 0.  This is useful to synchronize a TUID to some
- * external events.
+ * Reset the counter to 0.  This is useful to synchronize a TUID to an
+ * external event.
  *
  * If ctx is NULL emits a warning to stderr and continues.
  *

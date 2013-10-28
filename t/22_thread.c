@@ -26,7 +26,7 @@ void * test_tuid(void * t)
         BAIL_OUT("Error: fclose()");
     }
 
-    tuid64_end(a->ctx);
+    tuid64_destroy(a->ctx);
     a->ctx = 0;
     free(a);
     pthread_exit(NULL);
@@ -48,7 +48,8 @@ int main(void)
     for (t = 0; t < THREADS; t++) {
         diag("Starting thread %d\n", t);
 
-        tuid64_s *ctx = tuid64_init(0);
+        tuid64_s *ctx = tuid64_create(0);
+        tuid64_init(ctx);
 
         ctx->nsec_shift = 4;
         ctx->id = t;
