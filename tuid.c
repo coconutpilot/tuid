@@ -18,7 +18,11 @@ static const uint64_t sec2nsec = 1000000000ULL;
  *
  * Effectively returns the LSB in mask (except when mask == 0 it returns 1).
  */
-static uint64_t get_min_inc64(uint64_t);
+static uint64_t get_min_inc64(uint64_t mask)
+{
+    uint64_t mi = ((mask ^ (mask - 1)) >> 1) + 1;
+    return mi;
+}
 
 /**
  * xorshift64 - fast random number generator
@@ -31,7 +35,15 @@ static uint64_t get_min_inc64(uint64_t);
  * Algorithm taken from: Xorshift RNGs - George Marsaglia
  * http://www.jstatsoft.org/v08/i14/paper
  */
-static uint64_t xorshift64(uint64_t *);
+static uint64_t xorshift64(uint64_t *random)
+{
+    *random ^= (*random << 13);
+    *random ^= (*random >> 7);
+    *random ^= (*random << 17);
+
+    return *random;
+}
+
 
 tuid64_s * tuid64_init(tuid64_s *ctx)
 {
@@ -139,21 +151,6 @@ void tuid64_reset_counter(tuid64_s *ctx)
     ctx->counter = ctx->counter_max;
 error:
     return;
-}
-
-static uint64_t get_min_inc64(uint64_t mask)
-{
-    uint64_t mi = ((mask ^ (mask - 1)) >> 1) + 1;
-    return mi;
-}
-
-static uint64_t xorshift64(uint64_t *random)
-{
-    *random ^= (*random << 13);
-    *random ^= (*random >> 7);
-    *random ^= (*random << 17);
-
-    return *random;
 }
 
 /**
