@@ -9,6 +9,7 @@ script:
     
 after_success:
     - make test
+    - sudo apt-get -qq update
     - sudo apt-get -qq install valgrind
     - make testvalgrind
 
