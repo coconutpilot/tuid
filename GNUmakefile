@@ -4,7 +4,7 @@ CFLAGS += -I.
 
 .PHONY: clean test testvalgrind tags
 
-TEST_SOURCES  = $(wildcard t/*.c)
+TEST_SOURCES  = $(sort $(wildcard t/*.c))
 TEST_PROGRAMS = $(patsubst %.c,%,$(TEST_SOURCES))
 TEST_TARGETS  = $(patsubst %.c,%.test,$(TEST_SOURCES))
 TEST_VALGRIND = $(patsubst %.c,%.vgtest,$(TEST_SOURCES))
@@ -28,7 +28,7 @@ testvalgrind: $(TEST_VALGRIND)
 	LD_LIBRARY_PATH=. $<
 
 %.vgtest: %
-	LD_LIBRARY_PATH=. valgrind --track-origins=yes $<
+	LD_LIBRARY_PATH=. valgrind --track-origins=yes --leak-check=full --show-reachable=yes $<
 
 tags:
 	ctags -R
