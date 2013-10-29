@@ -41,7 +41,7 @@ typedef struct tuid64_s {
  *
  *      tuid64_s *ctx = tuid64_init(NULL);
  */
-extern int          tuid64_init(tuid64_s *ctx);
+extern int          tuid64_init(tuid64_s *ctx, const char *spec);
 
 /**
  * If unable to malloc the context emits a warning to stderr and returns NULL.

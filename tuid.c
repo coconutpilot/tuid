@@ -54,11 +54,29 @@ error:
     return 0;
 }
 
-int tuid64_init(tuid64_s *ctx)
+int tuid64_init(tuid64_s *ctx, const char *spec)
 {
-    if (! ctx) {
-        ctx = tuid64_create();
+    check(ctx, "Invalid tuid context");
+
+    char *p;
+
+    debug("Decoding TUID spec: %s", spec);
+    p = spec;
+    while (*p) {
+        char type = *p;
+        ++p;
+
+        int val = 0;
+        while (*p) {
+            char valc = *p;
+
+            val *= 10;
+            val += valc - '0';
+            ++p;
+        }
+        debug("Key: %c Val: %d", type, val);
     }
+
 
     ctx->nsec_offset = 0;
     ctx->nsec = 0;
