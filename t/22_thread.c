@@ -20,7 +20,6 @@ void * test_tuid(void * t)
     for (i = 0; i < ITERATIONS; i++) {
         uint64_t t64 = tuid64_r(a->ctx);
         fprintf(a->fp, "%" PRIX64 "\n", t64);
-        fprintf(a->fp, "%" PRIX64 "\n", t64);
     }
     if (fclose(a->fp)) {
         BAIL_OUT("Error: fclose()");
@@ -49,7 +48,7 @@ int main(void)
         diag("Starting thread %d\n", t);
 
         tuid64_s *ctx = tuid64_create(0);
-        tuid64_init(ctx);
+        tuid64_init(ctx, "N10");
 
         ctx->nsec_shift = 4;
         ctx->id = t;
