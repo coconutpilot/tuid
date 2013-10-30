@@ -36,7 +36,7 @@ tags:
 # self cleaning target from Mischa Sandberg
 clean:
 	@rm -rf $(shell $(MAKE) -nps all test testvalgrind | sed -n '/^# I/,$${/^[^\#\[%.][^ %]*: /s/:.*//p;}') \
-		libtuid.so.* tags gmon.out *.gcda *.gcno *.gcov *.prof \
+		libtuid.so.* tags gmon.out *.gcda *.gcno *.gcov *.prof tmp \
 		$(filter %.d,$(MAKEFILE_LIST))
 
 -include $(shell find . -name '*.d')
