@@ -58,21 +58,19 @@ int tuid64_init(tuid64_s *ctx, const char *spec)
 {
     check(ctx, "Invalid tuid context");
 
-    char *p;
-
     debug("Decoding TUID spec: %s", spec);
-    p = spec;
-    while (*p) {
-        char type = *p;
-        ++p;
+
+    while (*spec) {
+        char type = *spec;
+        ++spec;
 
         int val = 0;
-        while (*p) {
-            char valc = *p;
+        while (*spec) {
+            char valc = *spec;
 
             val *= 10;
             val += valc - '0';
-            ++p;
+            ++spec;
         }
         debug("Key: %c Val: %d", type, val);
     }
@@ -96,7 +94,7 @@ int tuid64_init(tuid64_s *ctx, const char *spec)
 
     ctx->last = 0;
 
-    return ctx;
+    return 1;
 error:
     return 0;
 }
