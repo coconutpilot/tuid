@@ -19,8 +19,8 @@ typedef struct tuid64_s {
     uint8_t  nsec_shift;        /* how far to left shift the nsec bits */
     uint64_t nsec_min_increment;/* minimum increment required if nsec mask was too coarse */
     uint64_t id;                /* static id, ie machine id */
-    uint16_t counter;           /* a counter, current value */
-    uint16_t counter_max;       /* when to reset the counter to 0 */
+    uint64_t counter;           /* a counter, current value */
+    uint64_t counter_max;       /* when to reset the counter to 0 */
     uint8_t  counter_shift;     /* how far to left shift the counter bits */
     uint64_t random;            /* a random #, also used as seed */
     uint64_t random_mask;       /* the bits of the random # to be used */
