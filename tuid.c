@@ -51,36 +51,17 @@ tuid64_s * tuid64_create()
 
     return ctx;
 error:
-    return 0;
+    return NULL;
 }
 
 int tuid64_init(tuid64_s *ctx, const char *spec)
 {
     check(ctx, "Invalid tuid context");
 
-    debug("Decoding TUID spec: %s", spec);
-
-    while (*spec) {
-        char type = *spec;
-        ++spec;
-
-        int val = 0;
-        while (*spec) {
-            char valc = *spec;
-
-            val *= 10;
-            val += valc - '0';
-            ++spec;
-        }
-        debug("Key: %c Val: %d", type, val);
-    }
-
-
     ctx->nsec_offset = 0;
     ctx->nsec = 0;
     ctx->nsec_mask = 0;
     ctx->nsec_shift = 0;
-    ctx->nsec_min_increment = get_min_inc64(ctx->nsec_mask);
 
     ctx->id = 0;
 
@@ -92,7 +73,69 @@ int tuid64_init(tuid64_s *ctx, const char *spec)
     ctx->random_mask = 0;
     ctx->random_shift = 0;
 
-    ctx->last = 0;
+    debug("Decoding TUID spec: %s", spec);
+    
+    int pos = 64; /* bit position starting from MSB */
+
+    /* walk the spec extracting a 1 letter identifier followed by a number */
+    while (*spec) {
+        char type = *spec;
+        ++spec;
+
+        uint64_t value = 0;
+        while (*spec) {
+            char c = *spec;
+            int v = *spec - '0';
+            if (v > 9 || v < 0) {
+                break;
+            }
+            /* XXX: overflow check required */
+            value *= 10;
+            value += v;
+            ++spec;
+        }
+        debug("Key: %c Val: %" PRIu64, type, value);
+
+        switch (type) {
+        case 'E':
+            check(value, "TUID spec error at: %c%" PRIu64, type, value);
+            ctx->nsec_offset = value;
+            debug("epoch offset: %" PRIu64, ctx->nsec_offset);
+            break;
+        case 'N':
+            check(value && value <= pos, "TUID spec error at: %c%" PRIu64, type, value);
+            ctx->nsec_mask = (~0ULL) >> (64 - value);
+            pos -= value;
+            ctx->nsec_shift = pos;
+            debug("nanoseconds: mask %#016" PRIx64 " shift %d", ctx->nsec_mask, ctx->nsec_shift);
+            break;
+        case 'C':
+            check(value && value <= pos, "TUID spec error at: %c%" PRIu64, type, value);
+            ctx->counter_max = (~0ULL) >> (64 - value);
+            ctx->counter = ctx->counter_max; /* this forces initialization */
+            pos -= value;
+            ctx->counter_shift = pos;
+            debug("counter: max %#016" PRIx64 " shift %d", ctx->counter_max, ctx->counter_shift);
+            break;
+        case 'R':
+            check(value && value <= pos, "TUID spec error at: %c%" PRIu64, type, value);
+            ctx->random_mask = (~0ULL) >> (64 - value);
+            debug("Setting random_mask to %#016" PRIx64, ctx->random_mask);
+            pos -= value;
+            ctx->random_shift = pos;
+            debug("random: mask %#016" PRIx64 " shift %d", ctx->random_mask, ctx->random_shift);
+            break;
+        case 'I':
+            check(value, "TUID spec error at: %c%" PRIu64, type, value);
+            ctx->id = value;
+            debug("id: %" PRIu64, value);
+            break;
+        }
+    }
+
+    ctx->nsec_min_increment = get_min_inc64(ctx->nsec_mask);
+
+    ctx->random = 0x5248c8561600f46dULL;
 
     return 1;
 error:
@@ -152,15 +195,6 @@ uint64_t tuid64_r(tuid64_s *ctx)
     rnd &= ctx->random_mask;
     rnd <<= ctx->random_shift;
     t64 |= rnd;
-
-    if (t64 <= ctx->last) {
-        debug("tuid too small: %" PRIx64 ", incrementing last tuid by 1", t64);
-        ++ctx->last;
-        t64 = ctx->last;
-    }
-    else {
-        ctx->last = t64;
-    }
 
     debug("generated tuid: %" PRIx64, t64);
     return t64;

@@ -25,7 +25,6 @@ typedef struct tuid64_s {
     uint64_t random;            /* a random #, also used as seed */
     uint64_t random_mask;       /* the bits of the random # to be used */
     uint8_t  random_shift;      /* XXX: turns out this is not needed */
-    uint64_t last;              /* the last TUID, used for uniqueness check */
 } tuid64_s;
 
 /**

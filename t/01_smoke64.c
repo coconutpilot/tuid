@@ -16,14 +16,14 @@ int main(void)
     tuid64_s *ctx = malloc(sizeof(*ctx));
     ok(ctx != NULL, "malloc");
     
-    int status = tuid64_init(ctx, "N10");
+    int status = tuid64_init(ctx, "N10C8R6");
     ok(status, "Context initialzed");
 
     tuid64_s *ctx2 = tuid64_create(NULL);
     ok(ctx2 != NULL, "Context malloc-ed in tuid64_create");
 
     uint64_t t = tuid64_r(ctx);
-    ok(t, "Got a tuid");
+    ok(t != 0, "Got a tuid %" PRIx64, t);
 
     t = tuid64_r(0);
     ok(! t, "Test invalid context, expected 0 got %" PRIx64, t);

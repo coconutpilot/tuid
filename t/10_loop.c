@@ -17,7 +17,7 @@ int main(void)
     plan(NO_PLAN);
 
     tuid64_s *ctx = malloc(sizeof(*ctx));
-    tuid64_init(ctx, "N10");
+    tuid64_init(ctx, "N50R10C4");
     pass("Initialized");
 
     uint64_t t1, t2 = 0;
