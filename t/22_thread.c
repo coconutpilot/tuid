@@ -48,10 +48,10 @@ int main(void)
         diag("Starting thread %d\n", t);
 
         tuid64_s *ctx = tuid64_create(0);
-        tuid64_init(ctx, "N10");
 
-        ctx->nsec_shift = 4;
-        ctx->id = t;
+        char spec[1000];
+        sprintf(spec, "N60I%d", t);
+        tuid64_init(ctx, spec);
 
         char fn[1000];
         FILE *fp;

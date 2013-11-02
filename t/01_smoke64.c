@@ -16,7 +16,7 @@ int main(void)
     tuid64_s *ctx = malloc(sizeof(*ctx));
     ok(ctx != NULL, "malloc");
     
-    int status = tuid64_init(ctx, "N10C8R6");
+    int status = tuid64_init(ctx, "N54C8R2");
     ok(status, "Context initialzed");
 
     tuid64_s *ctx2 = tuid64_create(NULL);
