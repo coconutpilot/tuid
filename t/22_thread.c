@@ -93,7 +93,6 @@ int main(void)
 
     char buf[1024];
 
-    ssize_t r;
     int failed = 0;
 
     while (fgets(buf, sizeof(buf), cmd)) {
