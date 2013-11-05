@@ -44,6 +44,18 @@ static uint64_t xorshift64(uint64_t *random)
     return *random;
 }
 
+/*
+ *
+ */
+size_t msb_position(uint64_t val) {
+    size_t pos = 0;
+    while (val) {
+        ++pos;
+        val >>= 1;
+    };
+    return pos;
+}
+
 tuid64_s * tuid64_create()
 {
     tuid64_s *ctx = malloc(sizeof(*ctx));
@@ -90,6 +102,7 @@ int tuid64_init(tuid64_s *ctx, const char *spec)
                 break;
             }
             /* XXX: overflow check required */
+            check(msb_position(value) + msb_position(10) <= 64, "TUID spec value overflow at: %c%" PRIu64, type, value);
             value *= 10;
             value += v;
             ++spec;

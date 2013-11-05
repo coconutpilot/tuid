@@ -7,5 +7,6 @@ hacking/
 t/01_smoke64
 t/10_loop
 t/22_thread
+t/30_overflow
 t/tap/tap.gcno
 tmp/
