@@ -83,7 +83,7 @@ int main(void)
             fail("pthread_join failed: %d\n", rc);
             return 13;
         }
-        pass("thread exited with status: %d\n", (int)t_rc);
+        pass("thread exited with status: %d\n", t_rc);
     }
 
     cmd = popen("cd tmp; sort * | uniq -d" , "r");

@@ -1,6 +1,7 @@
 CPPFLAGS += -DNDEBUG
 CPPFLAGS += -I.
-CFLAGS = -g -Wall -MMD
+CFLAGS    = -g -Wall -MMD -pthread
+LDFLAGS   = -pthread
 
 .PHONY: clean test testvalgrind tags
 
