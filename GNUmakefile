@@ -29,7 +29,7 @@ testvalgrind: $(TEST_VALGRIND)
 	LD_LIBRARY_PATH=. $<
 
 %.vgtest: %
-	LD_LIBRARY_PATH=. valgrind --track-origins=yes --leak-check=full --show-reachable=yes $<
+	LD_LIBRARY_PATH=. valgrind --track-origins=yes --leak-check=full $<
 
 tags:
 	ctags -R
@@ -44,8 +44,8 @@ clean:
 	find . -type f -name *.gcno -delete
 
 
-cover: CFLAGS += --coverage
-cover: LDFLAGS += --coverage
+cover: CFLAGS  += --coverage -fprofile-arcs -ftest-coverage
+cover: LDFLAGS += --coverage -fprofile-arcs -ftest-coverage
 cover: clean test
 	lcov -c -d . -o tuid.info --no-recursion
 	genhtml -o coverage_html tuid.info
