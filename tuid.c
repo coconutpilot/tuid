@@ -45,7 +45,10 @@ static uint64_t xorshift64(uint64_t *random)
 }
 
 /*
+ * msb_position - returns value of most significant bit
+ * @val: number that is being analyzed
  *
+ * Returns the MSB (if set).
  */
 size_t msb_position(uint64_t val) {
     size_t pos = 0;
