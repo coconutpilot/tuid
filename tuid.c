@@ -96,7 +96,6 @@ int tuid64_init(tuid64_s *ctx, const char *spec)
 
         uint64_t value = 0;
         while (*spec) {
-            char c = *spec;
             int v = *spec - '0';
             if (v > 9 || v < 0) {
                 break;
