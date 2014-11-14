@@ -141,7 +141,8 @@ int tuid64_init(tuid64_s *ctx, const char *spec)
             debug("random: mask %#016" PRIx64 " shift %d", ctx->random_mask, ctx->random_shift);
             break;
         case 'I':
-            check(value, "TUID spec error at: %c%" PRIu64, type, value);
+            /* Consider 0 a valid id */
+            /* check(value, "TUID spec error at: %c%" PRIu64, type, value); */
             ctx->id = value;
             debug("id: %" PRIu64, value);
             break;
@@ -149,8 +150,6 @@ int tuid64_init(tuid64_s *ctx, const char *spec)
     }
 
     ctx->nsec_min_increment = get_min_inc64(ctx->nsec_mask);
-
-    ctx->random = 0x5248c8561600f46dULL;
 
     return 1;
 error:
