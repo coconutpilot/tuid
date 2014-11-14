@@ -12,6 +12,7 @@
 int main(void)
 {
     plan(NO_PLAN);
+    note("Testing failure conditions, expect ERRORs below");
 
     tuid64_s *ctx = malloc(sizeof(*ctx));
     ok(ctx != NULL, "malloc");
