@@ -51,7 +51,9 @@ int main(void)
 
         char spec[1000];
         sprintf(spec, "N60I%d", t);
-        tuid64_init(ctx, spec);
+        if (! tuid64_init(ctx, spec)) {
+            BAIL_OUT("Error: tuid_init()");
+        }
 
         char fn[1000];
         FILE *fp;
