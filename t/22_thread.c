@@ -45,7 +45,7 @@ int main(void)
 
     int t;
     for (t = 0; t < THREADS; t++) {
-        diag("Starting thread %d\n", t);
+        diag("Starting thread %d", t);
 
         tuid64_s *ctx = tuid64_create(0);
 
@@ -72,7 +72,7 @@ int main(void)
         int rc;
         rc = pthread_create(&threads[t], NULL, test_tuid, (void *)myarg);
         if (rc) {
-            fail("pthread_create failed: %d\n", rc);
+            fail("pthread_create failed: %d", rc);
             return 13;
         }
     }
@@ -82,10 +82,10 @@ int main(void)
         void * t_rc;
         rc = pthread_join(threads[t], &t_rc);
         if (rc) {
-            fail("pthread_join failed: %d\n", rc);
+            fail("pthread_join failed: %d", rc);
             return 13;
         }
-        pass("thread exited with status: %d\n", t_rc);
+        pass("thread exited with status: %d", t_rc);
     }
 
     cmd = popen("cd tmp; sort * | uniq -d" , "r");
