@@ -3,6 +3,7 @@
 *.so
 *.so.*
 doc/
+example/thread
 hacking/
 t/01_smoke64
 t/10_loop

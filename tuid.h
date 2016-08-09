@@ -36,9 +36,7 @@ typedef struct tuid64_s {
  *
  * Examples:
  *      tuid64_s *ctx = malloc(sizeof(*ctx));
- *      tuid64_init(ctx);
- *
- *      tuid64_s *ctx = tuid64_init(NULL);
+ *      tuid64_init(ctx, "N54C8R2");
  */
 extern int          tuid64_init(tuid64_s *ctx, const char *spec);
 

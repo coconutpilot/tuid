@@ -1,5 +1,7 @@
 # TUIDs - Time based Unique IDentifiers
 
+[![Build Status](https://travis-ci.org/coconutpilot/tuid.png)](https://travis-ci.org/coconutpilot/tuid)
+
 ### What are TUIDs?
 
 TUIDs are unique identifiers designed for high performance computing.
@@ -25,6 +27,8 @@ monotonically increasing so their natural sort order is the order of creation.
 
 See tuid.h for usage.
 
-## Travis-CI Build Status
 
-[![Build Status](https://travis-ci.org/coconutpilot/tuid.png)](https://travis-ci.org/coconutpilot/tuid)
+## LICENSE
+
+Copyright 2013 David Sparks.  See the file LICENSE.txt included with the 
+TUID distribution for details.
