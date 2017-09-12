@@ -1,9 +1,9 @@
-CPPFLAGS += -DNDEBUG
+#CPPFLAGS += -DNDEBUG
 CPPFLAGS += -I.
 CFLAGS    = -g -Wall -MMD -pthread
 LDFLAGS   = -pthread
 
-.PHONY: clean test testvalgrind tags
+.PHONY: clean test testvalgrind example examplevalgrind tags
 
 TEST_SOURCES  = $(sort $(wildcard t/*.c))
 TEST_PROGRAMS = $(patsubst %.c,%,$(TEST_SOURCES))
