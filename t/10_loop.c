@@ -28,7 +28,7 @@ int main(void)
     for (i = 0; i < TESTMAX; ++i) {
         t1 = tuid64_r(ctx); 
         /* Too many ok() overflows terminal scrollback */
-        if (! t1 > t2) {
+        if (t2 >= t1) {
             fail("Monotonically increasing");
         }
         t2 = t1;
