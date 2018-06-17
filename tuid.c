@@ -4,13 +4,14 @@
 
 #include <inttypes.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <time.h>
 #include "tuid.h"
 #include "dbg.h"
 
 /* 1 billion nanoseconds in a second! */
-static const uint64_t sec2nsec = 1000000000ULL;
+static const uint64_t sec2nsec = UINT64_C(1000000000);
 
 /**
  * get_min_inc64 - calculate the minimum increment based on a bitmask
@@ -84,7 +85,7 @@ int tuid64_init(tuid64_s *ctx, const char *spec)
     ctx->counter_max = 0;
     ctx->counter_shift = 0;
  
-    ctx->random = 0x5248c8561600f46dULL;
+    ctx->random = UINT64_C(0x5248c8561600f46d);
     ctx->random_mask = 0;
     ctx->random_shift = 0;
 
@@ -119,14 +120,14 @@ int tuid64_init(tuid64_s *ctx, const char *spec)
             break;
         case 'N':
             check(value && value <= pos, "TUID spec error at: %c%" PRIu64, type, value);
-            ctx->nsec_mask = (~0ULL) >> (64 - value);
+            ctx->nsec_mask = UINT64_C(~0) >> (64 - value);
             pos -= value;
             ctx->nsec_shift = pos;
             debug("nanoseconds: mask %#016" PRIx64 " shift %d", ctx->nsec_mask, ctx->nsec_shift);
             break;
         case 'C':
             check(value && value <= pos, "TUID spec error at: %c%" PRIu64, type, value);
-            ctx->counter_max = (~0ULL) >> (64 - value);
+            ctx->counter_max = UINT64_C(~0) >> (64 - value);
             ctx->counter = ctx->counter_max; /* this forces initialization */
             pos -= value;
             ctx->counter_shift = pos;
@@ -134,7 +135,7 @@ int tuid64_init(tuid64_s *ctx, const char *spec)
             break;
         case 'R':
             check(value && value <= pos, "TUID spec error at: %c%" PRIu64, type, value);
-            ctx->random_mask = (~0ULL) >> (64 - value);
+            ctx->random_mask = UINT64_C(~0) >> (64 - value);
             debug("Setting random_mask to %#016" PRIx64, ctx->random_mask);
             pos -= value;
             ctx->random_shift = pos;
