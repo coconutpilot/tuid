@@ -84,13 +84,13 @@ int tuid64_init(tuid64_s *ctx, const char *spec)
     ctx->counter = 0;
     ctx->counter_max = 0;
     ctx->counter_shift = 0;
- 
+
     ctx->random = UINT64_C(0x5248c8561600f46d);
     ctx->random_mask = 0;
     ctx->random_shift = 0;
 
     debug("Decoding TUID spec: %s", spec);
-    
+
     int pos = 64; /* bit position starting from MSB */
 
     /* walk the spec extracting a 1 letter identifier followed by a number */
